@@ -71,7 +71,7 @@ void loop() {
     frequency= 349; //F
   }
   else if (distance <= 54.5){
-    frequency = 370//F#/G♭
+    frequency = 370;//F#/G♭
   }
   else if(distance <= 62){
     frequency = 392; //G
@@ -94,7 +94,7 @@ void loop() {
 
   Serial.print(distance);
   Serial.println(" cm");
-  tone(buzzer, sound);
+  tone(buzzer, frequency);
 
   delay(500);
 }
