@@ -9,8 +9,7 @@
 unsigned long echo = 0;
 int ultraSoundSignal = 9; // Ultrasound signal pin
 unsigned long ultrasoundValue = 0;
-double distance;
-
+double distance = 0;
 int frequency = 0;
 
 void setup() {
@@ -30,9 +29,17 @@ void setup() {
 }
 
 void loop() {
-  pinMode(ultraSoundSignal, OUTPUT); 
-  /*necessary for recording an accurate measurement*/
+  getDistance(); //sets global variable distance to the distance in cm
+  getNote(); //sets global variable frequency to the correct note's frequency in hertz
 
+  Serial.print(distance);
+  Serial.println(" cm");
+  tone(buzzer, frequency);
+
+  delay(500);
+}
+
+void getDistance(){
   digitalWrite(ultraSoundSignal, LOW); 
   delayMicroseconds(2); 
   digitalWrite(ultraSoundSignal, HIGH);
@@ -45,7 +52,9 @@ void loop() {
   digitalWrite(ultraSoundSignal, HIGH);
   echo = pulseIn(ultraSoundSignal, HIGH);
   distance = (echo / 58.138);
+}
 
+void getNote(){
   if (distance <= 9.5) {
     //digitalWrite(led, HIGH);
     frequency=262; //C
@@ -91,10 +100,4 @@ void loop() {
   else if(distance <= 99.5){
     frequency = 523;//C
   }
-
-  Serial.print(distance);
-  Serial.println(" cm");
-  tone(buzzer, frequency);
-
-  delay(500);
 }
