@@ -1,5 +1,4 @@
 /*#define trigPin 7
-#define echoPin 6
 #define led 13
 #define led2 12
 #define led3 11
@@ -8,6 +7,7 @@
 #define led6 8
 #define buzzer 3
 */
+#define echoPin 9;
 int sound = 0;
 
 
