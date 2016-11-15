@@ -4,8 +4,8 @@
 #define led4 10
 #define led5 9
 #define led6 8
-#define buzzer 3*/
-
+*/
+#define buzzer 3
 unsigned long echo = 0;
 int ultraSoundSignal = 9; // Ultrasound signal pin
 unsigned long ultrasoundValue = 0;
@@ -22,8 +22,9 @@ void setup() {
   pinMode(led4, OUTPUT);
   pinMode(led5, OUTPUT);
   pinMode(led6, OUTPUT);
-  pinMode(buzzer, OUTPUT);*/
-
+  */
+  
+  pinMode(buzzer, OUTPUT);
   pinMode(ultraSoundSignal,OUTPUT);
 }
 
