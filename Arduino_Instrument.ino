@@ -9,6 +9,7 @@
 unsigned long echo = 0;
 int ultraSoundSignal = 9; // Ultrasound signal pin
 unsigned long ultrasoundValue = 0;
+double distance;
 
 int frequency = 0;
 
