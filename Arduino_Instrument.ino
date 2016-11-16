@@ -52,6 +52,7 @@ void getDistance(){
   digitalWrite(ultraSoundSignal, HIGH);
   echo = pulseIn(ultraSoundSignal, HIGH);
   distance = (echo / 58.138);
+  return;
 }
 
 void getNote(){
@@ -100,4 +101,6 @@ void getNote(){
   else if(distance <= 99.5){
     frequency = 523;//C
   }
+  
+  return;
 }
