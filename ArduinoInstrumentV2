@@ -5,13 +5,16 @@
 #define led5 9
 #define led6 8
 */
-#define buzzer 3
+#define buzzer 8
 unsigned long echo = 0;
+int echoPin=11;
 int ultraSoundSignal = 9; // Ultrasound signal pin
 unsigned long ultrasoundValue = 0;
-double distance;
-
+double distance = 0;
 int frequency = 0;
+const int recordButton=7, playButton=4;
+int sound_duration[100], sound_frequency[100], order=0; // arrays for looping mechanism
+  unsigned long previousTime=0, elapsedTime=0; 
 
 void setup() {
 
@@ -24,15 +27,34 @@ void setup() {
   pinMode(led5, OUTPUT);
   pinMode(led6, OUTPUT);
   */
-  
+  pinMode(playButton, INPUT);
+  pinMode(recordButton, INPUT);
   pinMode(buzzer, OUTPUT);
   pinMode(ultraSoundSignal,OUTPUT);
 }
 
 void loop() {
-  pinMode(ultraSoundSignal, OUTPUT); 
-  /*necessary for recording an accurate measurement*/
+  getDistance(); //sets global variable distance to the distance in cm
+  getNote(); //sets global variable frequency to the correct note's frequency in hertz
+ 
+  if (digitalRead(playButton)==LOW)
+    play();
+  else
+    tone(buzzer, frequency);
+  if (digitalRead(recordButton)==LOW)
+    record();
+  else
+    sound_frequency[order]==frequency;
 
+  
+  Serial.print(distance);
+  Serial.println(" cm");
+  
+}
+
+void getDistance(){
+    pinMode(ultraSoundSignal, OUTPUT); 
+  
   digitalWrite(ultraSoundSignal, LOW); 
   delayMicroseconds(2); 
   digitalWrite(ultraSoundSignal, HIGH);
@@ -41,11 +63,13 @@ void loop() {
 
   /*takes the recorded value and converts to distance*/
 
-  pinMode(ultraSoundSignal, INPUT); 
-  digitalWrite(ultraSoundSignal, HIGH);
-  echo = pulseIn(ultraSoundSignal, HIGH);
+  pinMode(echoPin, INPUT); 
+  echo = pulseIn(echoPin, HIGH);
   distance = (echo / 58.138);
+}
 
+void getNote(){
+  //millis();
   if (distance <= 9.5) {
     //digitalWrite(led, HIGH);
     frequency=262; //C
@@ -71,7 +95,7 @@ void loop() {
     frequency= 349; //F
   }
   else if (distance <= 54.5){
-    frequency = 370//F#/G♭
+    frequency = 370;//F#/G♭
   }
   else if(distance <= 62){
     frequency = 392; //G
@@ -90,11 +114,33 @@ void loop() {
   }
   else if(distance <= 99.5){
     frequency = 523;//C
+  }else{
+    frequency = 0;
   }
 
-  Serial.print(distance);
-  Serial.println(" cm");
-  tone(buzzer, sound);
 
-  delay(500);
+} 
+void record()
+{
+  if(sound_frequency[order]!=frequency)
+  {
+    sound_duration[order]=millis() - previousTime;
+    previousTime = millis();
+
+    order++;
+  }
+  sound_frequency[order]==frequency;
+}
+void play()
+{
+  for(int i=0;i<100;i++)
+  {
+    tone(buzzer, sound_frequency[i], sound_duration[i]);
+  }
+}
+void reset()
+{
+  order=0;
+  memset(sound_frequency,0,sizeof(sound_frequency));
+  memset(sound_duration,0,sizeof(sound_duration));
 }
