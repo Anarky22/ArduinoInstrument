@@ -1,10 +1,4 @@
-/*#define led 13
-#define led2 12
-#define led3 11
-#define led4 10
-#define led5 9
-#define led6 8
-*/
+
 #define buzzer 8
 unsigned long echo = 0;
 int echoPin=11;
@@ -22,13 +16,7 @@ void setup() {
 
   Serial.begin (9600);
 
-  /*pinMode(led, OUTPUT);
-  pinMode(led2, OUTPUT);
-  pinMode(led3, OUTPUT);
-  pinMode(led4, OUTPUT);
-  pinMode(led5, OUTPUT);
-  pinMode(led6, OUTPUT);
-  */
+
   pinMode(dropButton, INPUT);
   pinMode(raiseButton, INPUT);
   pinMode(muteButton, INPUT);
@@ -41,25 +29,29 @@ void setup() {
 
 void loop() {
   getDistance(); //sets global variable distance to the distance in cm
-  getOctave(); //Checks to see if octave is changed
+  //getOctave(); //Checks to see if octave is changedM
   getNote(); //sets global variable frequency to the correct note's frequency in hertz
  
   if (digitalRead(playButton)==LOW)
-    play();
-  else if(muteButton == LOW)
-    tone(buzzer, frequency);
-  else
+   {
     noTone(buzzer);
-    
-  if (digitalRead(recordButton)==LOW)
-    record();
+    play();
+   }
   else
-    sound_frequency[order]==frequency;
+  {
+    tone(buzzer, frequency);
+  }
+  
+  if (digitalRead(recordButton)==LOW){
+    record();
+    sound_frequency[order]=frequency;
+  }
+  
 
   
   Serial.print(distance);
   Serial.println(" cm");
-  
+  //delay(100);
 }
 
 void getDistance(){
@@ -79,50 +71,43 @@ void getDistance(){
 }
 
 void getNote(){
-  //millis();
-  if (distance <= 9.5) {
-    //digitalWrite(led, HIGH);
+  if (distance <= 11.5/2) {
     frequency=note[0]; //C
   }
-  else if (distance <= 17) {
-    //digitalWrite(led2, HIGH);
+  else if (distance <= 21/2+1) {
     frequency = note[1]; //C#/D♭
   }
-  else if (distance <= 24.5) {
-    //digitalWrite(led3, HIGH);
+  else if (distance <= 30.5/2+2) {
     frequency = note[2]; //D
   } 
-  else if (distance <= 32) {
-    //digitalWrite(led4, HIGH);
+  else if (distance <= 40/2+3) {
     frequency = note[3]; //D#/E♭
   }
-  else if (distance <= 39.5) {
-    //digitalWrite(led5, HIGH);
+  else if (distance <= 49.5/2+4) {
     frequency= note[4]; //E
   }
-  else if (distance <= 47) {
-    //digitalWrite(led6, HIGH);
+  else if (distance <= 59/2+5) {
     frequency= note[5]; //F
   }
-  else if (distance <= 54.5){
+  else if (distance <= 68.5/2+6){
     frequency = note[6];//F#/G♭
   }
-  else if(distance <= 62){
+  else if(distance <= 78/2+7){
     frequency = note[7]; //G
   }
-  else if(distance <= 69.5){
+  else if(distance <= 87.5/2+8){
     frequency = note[8]; //G#/A♭
   }
-  else if(distance <= 77){
+  else if(distance <= 97/2+9){
     frequency = note[9]; //A
   }
-  else if(distance <= 84.5){
+  else if(distance <= 106.5/2+10){
     frequency = note[10];//A#/B♭
   }
-  else if(distance <= 92){
+  else if(distance <= 116/2+11){
     frequency = note[11];//B
   }
-  else if(distance <= 99.5){
+  else if(distance <= 125.5/2+12){
     frequency = note[12];//C
   }else{
     frequency = 0;
@@ -149,6 +134,8 @@ void getOctave(){
 
 void record()
 {
+  Serial.println(sound_frequency[order]);
+  Serial.println(frequency);
   if(sound_frequency[order]!=frequency)
   {
     sound_duration[order]=millis() - previousTime;
@@ -156,18 +143,32 @@ void record()
 
     order++;
   }
-  sound_frequency[order]==frequency;
+
+  sound_frequency[order]=frequency;
+  Serial.println(order);
 }
 void play()
 {
-  for(int i=0;i<100;i++)
+  for(int i=0;i<50;i++)
   {
-    tone(buzzer, sound_frequency[i], sound_duration[i]);
+
+  Serial.print(sound_frequency[i]);
+  Serial.print("                    ");
+  Serial.println(sound_duration[i]);
+  tone(buzzer, sound_frequency[i], sound_duration[i]);
+  delay(sound_duration[i]);
   }
 }
-void reset()
+/*void reset()
 {
   order=0;
   memset(sound_frequency,0,sizeof(sound_frequency));
   memset(sound_duration,0,sizeof(sound_duration));
 }
+*/
+ /* {
+  int *newarray = new int[order+1];
+  std::copy( array, array+std::min(order+1,order+1), newarray );
+  delete [] array;
+  array = newarray;
+}*/
