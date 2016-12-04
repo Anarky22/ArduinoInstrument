@@ -28,10 +28,10 @@ void setup() {
 
 void loop() {
   getDistance(); //sets global variable distance to the distance in cm
-  getOctave(); //Checks to see if octave is changedM
+  //getOctave(); //Checks to see if octave is changedM
   getNote(); //sets global variable frequency to the correct note's frequency in hertz
  
-  if (digitalRead(playButton)==LOW)
+  if (digitalRead(playButton)==HIGH)
    {
     noTone(buzzer);
     play();
@@ -44,16 +44,16 @@ void loop() {
     tone(buzzer, frequency);
   }
   
-  if (digitalRead(recordButton)==LOW){
+  if (digitalRead(recordButton)==HIGH){
     record();
     sound_frequency[order]=frequency;
   }
-    
-  if (digitalRead(muteButton)==LOW)
+  /*  
+  if (digitalRead(muteButton)==HIGH)
   {
     reset();
   }
-  
+  */
 
   
   Serial.print(distance);
@@ -110,14 +110,14 @@ void getNote(){
 } 
 
 void getOctave(){
-  if(dropButton == LOW && octave >= 1){ //lowers octave
+  if(dropButton == HIGH && octave >= 1){ //lowers octave
     for(int i = 0; i < sizeof(note)/sizeof(note[0]); i++){
       note[i] /=2;
     }
     octave--;
   }
 
-  if(raiseButton == LOW && octave <= 8){
+  if(raiseButton == HIGH && octave <= 8){
     for(int i = 0; i < sizeof(note)/sizeof(note[0]); i++){
       note[i] *= 2;
     }
